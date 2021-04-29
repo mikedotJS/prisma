@@ -99,7 +99,11 @@ export async function generateInFolder({
     )
   }
   const enginesPath = getEnginesPath()
-  if (useNapi || process.env.PRISMA_FORCE_NAPI) {
+  const napiLibraryPath = path.join(enginesPath, getNapiName(platform, 'fs'))
+  if (
+    (useNapi || process.env.PRISMA_FORCE_NAPI) &&
+    !fs.existsSync(napiLibraryPath)
+  ) {
     // This is required as the NAPI library is not downloaded by default
     await download({
       binaries: {
@@ -110,7 +114,7 @@ export async function generateInFolder({
   const binaryPaths = useNapi
     ? {
         libqueryEngineNapi: {
-          [platform]: path.join(enginesPath, getNapiName(platform, 'fs')),
+          [platform]: napiLibraryPath,
         },
       }
     : {
@@ -139,7 +143,6 @@ export async function generateInFolder({
     engineVersion: 'local',
     activeProvider: config.datasources[0].activeProvider,
   })
-
   const time = performance.now() - before
   debug(`Done generating client in ${time}`)
 
