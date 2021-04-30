@@ -1,5 +1,5 @@
 import Debug from '@prisma/debug'
-import { getEnginesPath } from '@prisma/engines'
+import { enginesVersion, getEnginesPath } from '@prisma/engines'
 import { download } from '@prisma/fetch-engine'
 import { getNapiName, getPlatform } from '@prisma/get-platform'
 import {
@@ -109,6 +109,7 @@ export async function generateInFolder({
       binaries: {
         'libquery-engine-napi': enginesPath,
       },
+      version: enginesVersion,
     })
   }
   const binaryPaths = useNapi
